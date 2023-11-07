@@ -9,7 +9,13 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import styles from "../../StyleSheet/HomeScreen/HomeFeatured";
-import { getFirestore, query, collection, getDocs } from "firebase/firestore";
+import {
+  getFirestore,
+  query,
+  collection,
+  getDocs,
+  onSnapshot,
+} from "firebase/firestore";
 import app from "../../../Global/Firebase";
 import colors from "../../../Global/colors";
 
@@ -25,12 +31,18 @@ const HomeFeatured = ({ title }) => {
         setIsLoading(false);
       }, 2000);
       const q = query(collection(db, "Featured"));
-      const data = await getDocs(q);
-      let products = [];
-      data.forEach((item) => {
-        products.push(item);
+      //const data = await getDocs(q);
+      const subscribe = onSnapshot(q, (data) => {
+        let products = [];
+        data.forEach((item) => {
+          products.push(item);
+        });
+        setProducts(products);
       });
-      setProducts(products);
+      const unsubscribe = onSnapshot(collection(db, "Featured"), () => {
+        subscribe();
+      });
+      unsubscribe();
     } catch (error) {
       console.log(error);
     }

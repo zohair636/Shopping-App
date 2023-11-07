@@ -16,8 +16,8 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <HomeHeader />
-      <HomeTopImage more={'See More'} />
-      <HomeCatalogue title={'Catalogue'} viewAll={'See All'} />
+      <HomeTopImage more={"See More"} />
+      <HomeCatalogue title={"Catalogue"} viewAll={"See All"} />
       <HomeFeatured title={"Featured"} />
       <CartItemsCount />
     </SafeAreaView>

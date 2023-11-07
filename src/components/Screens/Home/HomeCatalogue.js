@@ -9,7 +9,14 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { styles } from "../../StyleSheet/HomeScreen/HomeCatalogue";
-import { getFirestore, getDocs, collection, query } from "firebase/firestore";
+import {
+  getFirestore,
+  getDocs,
+  collection,
+  query,
+  onSnapshot,
+  doc,
+} from "firebase/firestore";
 import app from "../../../Global/Firebase";
 import colors from "../../../Global/colors";
 
@@ -24,13 +31,21 @@ const HomeCatalogue = ({ title, viewAll }) => {
       setTimeout(() => {
         setIsLoading(false);
       }, 2000);
-      let products = [];
+      //let products = [];
       const q = query(collection(db, "Catalogue"));
-      const data = await getDocs(q);
-      data.forEach((item) => {
-        products.push(item);
+      //const data = await getDocs(q);
+      const subscribe = onSnapshot(q, (data) => {
+        let products = [];
+        data.forEach((item) => {
+          products.push(item);
+        });
+        setProducts(products);
+        //subscribe()
       });
-      setProducts(products);
+      const unsubscribe = onSnapshot(collection(db, "Catalogue"), () => {
+        subscribe()
+      });
+      unsubscribe()
     } catch (error) {
       console.log(error);
     }
